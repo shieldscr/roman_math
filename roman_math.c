@@ -8,6 +8,7 @@ const int NUMERAL_BUFFER_SIZE = 16;
 const int OPERAND_MAX=3999;
 const char *RANGE_ERROR_MESSAGE = "Operand must be between 1 and 3999";
 const char *NULL_ERROR_MESSAGE = "Operand must not be NULL";
+const char *OPERAND_ORDER_MESSAGE = "Operand two cannot be greater than operand one";
 
 char numerals[7] = {'I', 'V', 'X', 'L', 'C', 'D', 'M'};
 int integers[7] = {1, 5, 10, 50, 100, 500, 1000};
@@ -92,12 +93,13 @@ char *subtract(const char *num_one, const char *num_two) {
 	if(num_one == NULL || num_two == NULL) {
 		return (char *)NULL_ERROR_MESSAGE;
 	}
-	
 	int integer_value_one = convert_to_integer(num_one);
 	int integer_value_two = convert_to_integer(num_two);
 
 	if(is_valid_range(&integer_value_one, &integer_value_two) != 0) {
 		return (char *)RANGE_ERROR_MESSAGE;
+	} else if(integer_value_two > integer_value_one) {
+		return (char *)OPERAND_ORDER_MESSAGE;
 	}
 
 	int total = integer_value_one - integer_value_two;

@@ -5,75 +5,76 @@
 
 const char *EXPECTED_ERROR_MESSAGE = "Operand must be between 1 and 3999";
 const char *EXPECTED_NULL_ERROR_MESSAGE = "Operand must not be NULL";
+const char *EXPECTED_OPERAND_ORDER_MESSAGE = "Operand two cannot be greater than operand one";
 
 START_TEST(numeral_one_can_be_converted)
 {
-    fail_unless(convert_to_integer("I") == 1);
+    ck_assert_int_eq(convert_to_integer("I"), 1);
 }
 END_TEST
 
 START_TEST(numeral_two_can_be_converted)
 {
-    fail_unless(convert_to_integer("II") == 2);
+    ck_assert_int_eq(convert_to_integer("II"), 2);
 }
 END_TEST
 
 START_TEST(numeral_three_can_be_converted)
 {
-    fail_unless(convert_to_integer("III") == 3);
+    ck_assert_int_eq(convert_to_integer("III"), 3);
 }
 END_TEST
 
 START_TEST(numeral_four_can_be_converted)
 {
-    fail_unless(convert_to_integer("IV") == 4);
+    ck_assert_int_eq(convert_to_integer("IV"), 4);
 }
 END_TEST
 
 START_TEST(numeral_five_can_be_converted)
 {
-    fail_unless(convert_to_integer("V") == 5);
+    ck_assert_int_eq(convert_to_integer("V"), 5);
 }
 END_TEST
 
 START_TEST(numeral_ten_can_be_converted)
 {
-    fail_unless(convert_to_integer("X") == 10);
+    ck_assert_int_eq(convert_to_integer("X"), 10);
 }
 END_TEST
 
 START_TEST(numeral_one_hundred_can_be_converted)
 {
-    fail_unless(convert_to_integer("C") == 100);
+    ck_assert_int_eq(convert_to_integer("C"), 100);
 }
 END_TEST
 
 START_TEST(numeral_one_thousand_can_be_converted)
 {
-    fail_unless(convert_to_integer("M") == 1000);
+    ck_assert_int_eq(convert_to_integer("M"), 1000);
 }
 END_TEST
 
 START_TEST(numeral_fifty_can_be_converted)
 {
-    fail_unless(convert_to_integer("L") == 50);
+    ck_assert_int_eq(convert_to_integer("L"), 50);
 }
 END_TEST
 
 START_TEST(numeral_five_hundred_can_be_converted)
 {
-    fail_unless(convert_to_integer("D") == 500);
+    ck_assert_int_eq(convert_to_integer("D"), 500);
 }
 END_TEST
 
 START_TEST(integration_test_edge_cases)
 {
-    fail_unless(convert_to_integer("XV") == 15);
-    fail_unless(convert_to_integer("ML") == 1050);
-    fail_unless(convert_to_integer("XCIX") == 99);
-    fail_unless(convert_to_integer("MMMCMXCIX") == 3999);
-    fail_unless(convert_to_integer("MCCXXXIV") == 1234);
-    fail_unless(convert_to_integer("XLII") == 42);
+    ck_assert_int_eq(convert_to_integer("XV"), 15);
+    ck_assert_int_eq(convert_to_integer("ML"), 1050);
+    ck_assert_int_eq(convert_to_integer("XCIX"), 99);
+    ck_assert_int_eq(convert_to_integer("MMMCMXCIX"), 3999);
+    ck_assert_int_eq(convert_to_integer("MCCXXXIV"), 1234);
+    ck_assert_int_eq(convert_to_integer("XLII"), 42);
 }
 END_TEST
 
@@ -239,6 +240,12 @@ START_TEST(subtract_does_not_accept_null)
 }
 END_TEST
 
+START_TEST(subtract_operand_two_cannot_be_greater_than_one)
+{
+    ck_assert_str_eq(subtract("I", "II"), EXPECTED_OPERAND_ORDER_MESSAGE);
+}
+END_TEST
+
 START_TEST(two_numerals_can_be_subtracted)
 {
     ck_assert_str_eq(subtract("II", "I"), "I");
@@ -287,6 +294,7 @@ int main(void)
     tcase_add_test(tc1_1, given_numeral_operand_greater_than_or_equal_to_max_operand_value_then_subtract_returns_error_message);
     tcase_add_test(tc1_1, add_does_not_accept_null);
     tcase_add_test(tc1_1, subtract_does_not_accept_null);
+    tcase_add_test(tc1_1, subtract_operand_two_cannot_be_greater_than_one);
 
     tcase_add_test(tc1_1, two_numerals_can_be_added);
     tcase_add_test(tc1_1, two_numerals_can_be_subtracted);
