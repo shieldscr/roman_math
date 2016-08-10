@@ -3,17 +3,7 @@
 
 #include "roman_math.h"
 
-START_TEST(index_of_returns_index_of_found_character)
-{
-    fail_unless(index_of("value", 'l') == 2, "Actual: %i", index_of("value", 'l'));
-}
-END_TEST
-
-START_TEST(index_of_returns_negative_one_when_character_is_not_found)
-{
-    fail_unless(index_of("value", 'z') == -1, "Actual: %i", index_of("value", 'l'));
-}
-END_TEST
+const char *EXPECTED_OPERAND_LIMIT_ERROR_MESSAGE = "Operand must be between 1 and 3999";
 
 START_TEST(numeral_one_can_be_converted)
 {
@@ -213,10 +203,24 @@ END_TEST
 START_TEST(two_numerals_can_be_added)
 {
     ck_assert_str_eq(add("I", "I"), "II");
-    ck_assert_str_eq(add("I", "III"), "IV");
-    ck_assert_str_eq(add("X", "X"), "XX");
-    ck_assert_str_eq(add("CI", "XLII"), "CXLIII");
-    ck_assert_str_eq(add("CL", "C"), "CCL");
+}
+END_TEST
+
+START_TEST(given_numeral_operand_greater_than_or_equal_to_max_operand_value_then_add_returns_error_message)
+{
+    ck_assert_str_eq(add("MMMM", "I"), EXPECTED_OPERAND_LIMIT_ERROR_MESSAGE);
+    ck_assert_str_eq(add("MMMCMXCIX", "I"), EXPECTED_OPERAND_LIMIT_ERROR_MESSAGE);
+
+    ck_assert_str_eq(add("I", "MMMM"), EXPECTED_OPERAND_LIMIT_ERROR_MESSAGE);
+    ck_assert_str_eq(add("I", "MMMCMXCIX"), EXPECTED_OPERAND_LIMIT_ERROR_MESSAGE);
+}
+END_TEST
+
+
+START_TEST(given_numeral_operand_greater_than_or_equal_to_max_operand_value_then_subtract_returns_error_message)
+{
+    ck_assert_str_eq(subtract("MMMM", "I"), EXPECTED_OPERAND_LIMIT_ERROR_MESSAGE);
+    ck_assert_str_eq(subtract("MMMCMXCIX", "I"), EXPECTED_OPERAND_LIMIT_ERROR_MESSAGE);
 }
 END_TEST
 
@@ -238,7 +242,6 @@ int main(void)
     int nf;
 
     suite_add_tcase(s1, tc1_1);
-    tcase_add_test(tc1_1, index_of_returns_index_of_found_character);
     tcase_add_test(tc1_1, numeral_one_can_be_converted);
     tcase_add_test(tc1_1, numeral_two_can_be_converted);
     tcase_add_test(tc1_1, numeral_three_can_be_converted);
@@ -265,6 +268,8 @@ int main(void)
     tcase_add_test(tc1_1, integer_nine_hundred_can_be_converted);
     tcase_add_test(tc1_1, integer_one_thousand_can_be_converted);
     tcase_add_test(tc1_1, integration_test_integer_conversion_edge_cases);
+    tcase_add_test(tc1_1, given_numeral_operand_greater_than_or_equal_to_max_operand_value_then_add_returns_error_message);
+    tcase_add_test(tc1_1, given_numeral_operand_greater_than_or_equal_to_max_operand_value_then_subtract_returns_error_message);
 
     tcase_add_test(tc1_1, two_numerals_can_be_added);
     tcase_add_test(tc1_1, two_numerals_can_be_subtracted);
