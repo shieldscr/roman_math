@@ -6,7 +6,8 @@
 
 const int NUMERAL_BUFFER_SIZE = 16;
 const int OPERAND_MAX=3999;
-const char *OPERAND_LIMIT_ERROR_MESSAGE = "Operand must be between 1 and 3999";
+const char *RANGE_ERROR_MESSAGE = "Operand must be between 1 and 3999";
+const char *NULL_ERROR_MESSAGE = "Operand must not be NULL";
 
 char numerals[7] = {'I', 'V', 'X', 'L', 'C', 'D', 'M'};
 int integers[7] = {1, 5, 10, 50, 100, 500, 1000};
@@ -24,7 +25,8 @@ static int index_of(const char *value, const char find) {
 }
 
 static int is_valid_range(const int *number_one, const int *number_two) {
-	if(*number_one >= OPERAND_MAX || *number_two >= OPERAND_MAX) {
+	if(*number_one >= OPERAND_MAX || *number_two >= OPERAND_MAX
+		|| number_one == NULL || number_two == NULL) {
 		return -1;
 	} else {
 		return 0;
@@ -68,11 +70,15 @@ char *convert_to_numeral(int integer) {
 }
 
 char *add(const char *num_one, const char *num_two) {
+	if(num_one == NULL || num_two == NULL) {
+		return (char *)NULL_ERROR_MESSAGE;
+	}
+
 	const int integer_value_one = convert_to_integer(num_one);
 	const int integer_value_two = convert_to_integer(num_two);
 
 	if(is_valid_range(&integer_value_one, &integer_value_two) != 0) {
-		return (char *)OPERAND_LIMIT_ERROR_MESSAGE;
+		return (char *)RANGE_ERROR_MESSAGE;
 	}
 
 	int total = integer_value_one + integer_value_two;
@@ -83,11 +89,15 @@ char *add(const char *num_one, const char *num_two) {
 }
 
 char *subtract(const char *num_one, const char *num_two) {
+	if(num_one == NULL || num_two == NULL) {
+		return (char *)NULL_ERROR_MESSAGE;
+	}
+	
 	int integer_value_one = convert_to_integer(num_one);
 	int integer_value_two = convert_to_integer(num_two);
 
 	if(is_valid_range(&integer_value_one, &integer_value_two) != 0) {
-		return (char *)OPERAND_LIMIT_ERROR_MESSAGE;
+		return (char *)RANGE_ERROR_MESSAGE;
 	}
 
 	int total = integer_value_one - integer_value_two;

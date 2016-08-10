@@ -3,7 +3,8 @@
 
 #include "roman_math.h"
 
-const char *EXPECTED_OPERAND_LIMIT_ERROR_MESSAGE = "Operand must be between 1 and 3999";
+const char *EXPECTED_ERROR_MESSAGE = "Operand must be between 1 and 3999";
+const char *EXPECTED_NULL_ERROR_MESSAGE = "Operand must not be NULL";
 
 START_TEST(numeral_one_can_be_converted)
 {
@@ -208,19 +209,33 @@ END_TEST
 
 START_TEST(given_numeral_operand_greater_than_or_equal_to_max_operand_value_then_add_returns_error_message)
 {
-    ck_assert_str_eq(add("MMMM", "I"), EXPECTED_OPERAND_LIMIT_ERROR_MESSAGE);
-    ck_assert_str_eq(add("MMMCMXCIX", "I"), EXPECTED_OPERAND_LIMIT_ERROR_MESSAGE);
+    ck_assert_str_eq(add("MMMM", "I"), EXPECTED_ERROR_MESSAGE);
+    ck_assert_str_eq(add("MMMCMXCIX", "I"), EXPECTED_ERROR_MESSAGE);
 
-    ck_assert_str_eq(add("I", "MMMM"), EXPECTED_OPERAND_LIMIT_ERROR_MESSAGE);
-    ck_assert_str_eq(add("I", "MMMCMXCIX"), EXPECTED_OPERAND_LIMIT_ERROR_MESSAGE);
+    ck_assert_str_eq(add("I", "MMMM"), EXPECTED_ERROR_MESSAGE);
+    ck_assert_str_eq(add("I", "MMMCMXCIX"), EXPECTED_ERROR_MESSAGE);
 }
 END_TEST
 
 
 START_TEST(given_numeral_operand_greater_than_or_equal_to_max_operand_value_then_subtract_returns_error_message)
 {
-    ck_assert_str_eq(subtract("MMMM", "I"), EXPECTED_OPERAND_LIMIT_ERROR_MESSAGE);
-    ck_assert_str_eq(subtract("MMMCMXCIX", "I"), EXPECTED_OPERAND_LIMIT_ERROR_MESSAGE);
+    ck_assert_str_eq(subtract("MMMM", "I"), EXPECTED_ERROR_MESSAGE);
+    ck_assert_str_eq(subtract("MMMCMXCIX", "I"), EXPECTED_ERROR_MESSAGE);
+}
+END_TEST
+
+START_TEST(add_does_not_accept_null)
+{
+    ck_assert_str_eq(add("I", NULL), EXPECTED_NULL_ERROR_MESSAGE);
+    ck_assert_str_eq(add(NULL, "I"), EXPECTED_NULL_ERROR_MESSAGE);
+}
+END_TEST
+
+START_TEST(subtract_does_not_accept_null)
+{
+    ck_assert_str_eq(subtract("I", NULL), EXPECTED_NULL_ERROR_MESSAGE);
+    ck_assert_str_eq(subtract(NULL, "I"), EXPECTED_NULL_ERROR_MESSAGE);
 }
 END_TEST
 
@@ -270,6 +285,8 @@ int main(void)
     tcase_add_test(tc1_1, integration_test_integer_conversion_edge_cases);
     tcase_add_test(tc1_1, given_numeral_operand_greater_than_or_equal_to_max_operand_value_then_add_returns_error_message);
     tcase_add_test(tc1_1, given_numeral_operand_greater_than_or_equal_to_max_operand_value_then_subtract_returns_error_message);
+    tcase_add_test(tc1_1, add_does_not_accept_null);
+    tcase_add_test(tc1_1, subtract_does_not_accept_null);
 
     tcase_add_test(tc1_1, two_numerals_can_be_added);
     tcase_add_test(tc1_1, two_numerals_can_be_subtracted);
